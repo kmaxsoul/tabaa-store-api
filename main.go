@@ -6,8 +6,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/jackc/pgx/v5/pgxpool"
-	"github.com/kmaxsoul/tabaa-store-api/internal/config"
-	"github.com/kmaxsoul/tabaa-store-api/internal/database"
+	"github.com/kmaxsoul/tabaa-store-api/config"
+	"github.com/kmaxsoul/tabaa-store-api/database"
 )
 
 func main() {
