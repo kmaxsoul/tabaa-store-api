@@ -1,13 +1,14 @@
 package main
 
 import (
-	"fmt"
 	"log"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/kmaxsoul/tabaa-store-api/config"
 	"github.com/kmaxsoul/tabaa-store-api/database"
+	"github.com/kmaxsoul/tabaa-store-api/handlers"
+	"github.com/kmaxsoul/tabaa-store-api/repository"
 )
 
 func main() {
@@ -19,8 +20,6 @@ func main() {
 		log.Fatal("failed to load configuration: ", err)
 	}
 
-	fmt.Println("TEST URL:", cfg.DatabaseURL)
-
 	var pool *pgxpool.Pool
 	pool, err = database.Connect(cfg.DatabaseURL)
 
@@ -30,15 +29,17 @@ func main() {
 
 	defer pool.Close()
 
+	userRepo := repository.NewUserRepository(pool)
+
+	userHandler := handlers.NewUserHandler(userRepo)
+
 	var router *gin.Engine = gin.Default()
 	router.SetTrustedProxies(nil)
-	router.GET("/", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message":  "API is running well",
-			"status":   "success",
-			"database": "connected",
-		})
-	})
+
+	api := router.Group("/api")
+	{
+		api.POST("/register", userHandler.RegisterUser)
+	}
 
 	router.Run(":" + cfg.ServerPort)
 }
