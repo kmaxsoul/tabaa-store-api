@@ -13,7 +13,6 @@ type UserHandler struct {
 	repo *repository.UserRepository
 }
 
-// 1. إنشاء هيكل مخصص لاستقبال بيانات التسجيل فقط
 type RegisterRequest struct {
 	FirstName   string `json:"first_name" binding:"required"`
 	LastName    string `json:"last_name" binding:"required"`
